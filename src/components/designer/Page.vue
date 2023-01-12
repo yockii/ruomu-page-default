@@ -31,13 +31,16 @@ const unselectWidget = () => {
 
 const [collect, drop] = useDrop(() => ({
   accept: 'container',
-  drop (_item: unknown, monitor) {
+  drop (_item: any, monitor) {
     const didDrop = monitor.didDrop()
     if (didDrop) {
       console.log(didDrop)
       return
     }
-    console.log(_item)
+
+    if (_item.id && _item.id !== '') {
+      return _item
+    }
 
     props.designConfig.addWidget(_item as Widget)
   },
@@ -74,13 +77,12 @@ const [collect, drop] = useDrop(() => ({
   }
   :deep(.drag-handle) {
     position: absolute;
-    padding: 3px;
+    padding: 6px;
     font-size: 12px;
     color: #fff;
-    top: -5px;
-    left: -5px;
     background-color: #0CF;
     cursor: move;
+    z-index: 999999;
   }
 }
 </style>

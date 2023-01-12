@@ -1,5 +1,6 @@
 import { deepClone, generateId } from '@/utils/util'
 import { Property } from '../property/Property'
+import { Container } from './container/Container'
 
 export class Widget {
   type:string
@@ -33,21 +34,13 @@ export class Widget {
         parent?: Widget | null
     }
   ) {
+    this.id = id
     this.type = type
     this.group = group
     this.icon = icon
     this.displayName = displayName
-    if (id) {
-      this.id = id
-    } else {
-      this.id = this.type + generateId()
-    }
 
     this.options = options.clone()
-
-    if (!this.options.name) {
-      this.options.name = this.id
-    }
 
     this.parent = parent
     this.selected = selected

@@ -42,6 +42,7 @@ export class Container extends Widget {
     } else {
       this.children.push(child)
     }
+    child.parent = this
   }
 
   removeChildren (startIdx: number = 0, size: number = 1) {

@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
+    "@vueuse/core": "^9.10.0",
+    "dnd-core": "^16.0.1",
     "element-plus": "^2.2.19",
     "lodash.clonedeep": "^4.5.0",
     "mitt": "^3.0.0",

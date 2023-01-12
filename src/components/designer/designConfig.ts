@@ -1,5 +1,6 @@
 import eventBus from '@/utils/eventBus'
 import { PageProperty } from './property/settings/page/PageProperty'
+import { Container } from './widget/container/Container'
 import { Widget } from './widget/Widget'
 
 export class DesignConfig {
@@ -33,15 +34,90 @@ export class DesignConfig {
     }
   }
 
-  addWidget (widget: Widget, index: number = -1) {
-    console.log(widget instanceof Widget)
+  widgetMap:Map<string, Widget> = new Map()
 
+  findWidgetById (id: string): Widget | null {
+    const r = this.widgetMap.get(id)
+    if (r) {
+      return r
+    }
+    const r0 = this.findWidgetByIdFromItems(id)
+    if (r0) {
+      this.widgetMap.set(id, r0)
+    }
+    return r0
+  }
+
+  findWidgetByIdFromItems (id: string, items: Widget[] = this.items): Widget | null {
+    for (let i = 0; i < items.length; i++) {
+      const w = this.items[i]
+      if (w.id === id) {
+        return w
+      }
+      const r = this.findWidgetByIdInWidget(id, w)
+      if (r) {
+        return r
+      }
+    }
+    return null
+  }
+
+  findWidgetByIdInWidget (id: string, widget: Widget): Widget|null {
+    if (widget instanceof Container) {
+      const c = widget as Container
+      return this.findWidgetByIdFromItems(id, c.children)
+    }
+    return null
+  }
+
+  addWidget (widget: Widget, index: number = -1) {
     const w = widget.clone() // widget.copy()
 
     if (index > -1) {
       this.items.splice(index, 0, w)
     } else {
       this.items.push(w)
+    }
+  }
+
+  moveWidget (movedWidget: Widget, targetWidget: Widget, isAfter: boolean = false) {
+    if (targetWidget.parent) {
+      // 有父节点
+      const parent = targetWidget.parent as Container
+      const idx = parent.children.findIndex((w) => {
+        return w.id === targetWidget.id
+      })
+      if (idx > -1) {
+        this.removeFromParent(movedWidget)
+        parent.children.splice(idx, 0, movedWidget)
+        movedWidget.parent = parent
+      }
+    } else {
+      // 没有父节点
+      const idx = this.items.findIndex((w) => {
+        return w.id === targetWidget.id
+      })
+      if (idx > -1) {
+        this.removeFromParent(movedWidget)
+        this.items.splice(idx, 0, movedWidget)
+      }
+    }
+  }
+
+  removeFromParent (widget: Widget) {
+    if (widget.parent) {
+      const parent = widget.parent as Container
+      const idx = parent.children.findIndex(w => {
+        return w.id === widget.id
+      })
+      if (idx > -1) {
+        parent.children.splice(idx, 1)
+      }
+    } else {
+      const idx = this.items.findIndex(w => w.id === widget.id)
+      if (idx > -1) {
+        this.items.splice(idx, 1)
+      }
     }
   }
 

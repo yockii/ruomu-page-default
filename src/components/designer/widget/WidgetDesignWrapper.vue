@@ -1,5 +1,5 @@
 <template>
-  <div :ref="preview" :style="{opacity}" class="drag-box">
+  <div :ref="setRef" class="drag-box" :style="{opacity}">
     <div v-if="widget.selected" :ref="drag" class="drag-handle">
       <SvgIcon icon="move"></SvgIcon>
     </div>
@@ -8,24 +8,89 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from 'vue'
-import { useDrag } from 'vue3-dnd'
+import { toRefs } from '@vueuse/core'
+import { DragSourceMonitor, useDrag, useDrop } from 'vue3-dnd'
 import SvgIcon from '@/components/svg-icon/index.vue'
 import { DesignConfig } from '../designConfig'
 import { Widget } from './Widget'
+import { unref, computed, ref } from 'vue'
+import type { XYCoord, Identifier } from 'dnd-core'
+import { Container } from './container/Container'
 const props = defineProps<{
   widget: Widget,
   designConfig: DesignConfig
 }>()
 
 // 拖拽相关代码 ///
-const [collect, drag, preview] = useDrag(() => ({
+const wrapper = ref<HTMLDivElement>()
+
+const [dropCollect, drop] = useDrop<Widget, void, { handlerId: Identifier | null, isShallowOver: boolean }>({
+  accept: ['container', 'widget'],
+  collect (monitor) {
+    return {
+      handlerId: monitor.getHandlerId(),
+      isShallowOver: monitor.isOver({ shallow: true })
+    }
+  },
+  hover (item: Widget, monitor) {
+    if (item.id === props.widget.id) {
+      return
+    }
+
+    const dragIndex = item.parent ? ((item.parent as Container).children.findIndex(w => w.id === item.id)) : props.designConfig.items.findIndex(w => w.id === item.id)
+    const hoverIndex = props.widget.parent ? ((props.widget.parent as Container).children.findIndex(w => w.id === props.widget.id)) : props.designConfig.items.findIndex(w => w.id === props.widget.id)
+
+    const sameParent = (item.parent === null && props.widget.parent === null) || (item.parent?.id === props.widget.parent?.id)
+
+    if (sameParent && dragIndex === hoverIndex) {
+      return
+    }
+
+    const rect = wrapper.value?.getBoundingClientRect()
+    const step = (rect?.height || 0) / 3
+    const top = rect?.top || 0
+    const bottom = rect?.bottom || 0
+    const sourceY = monitor.getClientOffset()?.y || 0
+    if (sourceY < top + step) {
+      if (dragIndex < hoverIndex) {
+        return
+      }
+      console.log(`dragIndex=${dragIndex}, hoverIndex=${hoverIndex}`)
+
+      // 在当前组件之前插入
+      props.designConfig.moveWidget(item, props.widget)
+    } else if (sourceY > bottom - step) {
+      if (dragIndex > hoverIndex) {
+        return
+      }
+      console.log(`dragIndex=${dragIndex}, hoverIndex=${hoverIndex}`)
+      // 在当前组件之后插入
+      props.designConfig.moveWidget(item, props.widget, true)
+    } else {
+      // console.log('嵌入')
+    }
+  }
+})
+
+const [collect, drag] = useDrag(() => ({
   type: props.widget.group,
-  collect: monitor => ({
-    opacity: monitor.isDragging() ? 0.4 : 1
-  })
+  item: props.widget,
+  collect: monitor => {
+    const result = {
+      handlerId: monitor.getHandlerId(),
+      isDragging: monitor.isDragging()
+    }
+    return result
+  }
 }))
-const { opacity } = collect
+
+const { handlerId, isShallowOver } = toRefs(dropCollect)
+const { isDragging } = toRefs(collect)
+const opacity = computed(() => (unref(isDragging) ? 0 : 1))
+
+const setRef = (el: HTMLDivElement) => {
+  wrapper.value = drag(drop(el)) as HTMLDivElement
+}
 // 拖拽代码结束 ///
 
 </script>
