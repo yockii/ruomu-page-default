@@ -1,11 +1,14 @@
 <template>
   <el-col :span="widget.options.span" :offset="widget.options.offset" :push="widget.options.push" :pull="widget.options.pull" @click.stop="selected()">
-    <div class="ruomu-widget" :class="{selected: widget.selected}" :ref="setRef">
-
+    <div class="ruomu-widget" :class="{selected: widget.selected}" :ref="setRef" :style="{opacity}">
+      <div v-if="widget.selected" :ref="drag" class="drag-handle">
+        <SvgIcon icon="move"></SvgIcon>
+      </div>
     </div>
   </el-col>
 </template>
 <script lang="ts" setup name="rmCol">
+import SvgIcon from '@/components/svg-icon/index.vue'
 import { toRefs } from '@vueuse/core'
 import { computed, ref, unref } from 'vue'
 import { useDrag, useDrop } from 'vue3-dnd'
@@ -34,6 +37,7 @@ const [, drop] = useDrop<Widget>({
     if (!item.parent) {
       return // 没有parent的，不参与
     }
+
     const itemParent = item.parent as Container
     const myParent = props.widget.parent as Container
 
@@ -43,7 +47,7 @@ const [, drop] = useDrop<Widget>({
     const sameParent = itemParent.id === myParent.id
 
     const rect = wrapper.value?.getBoundingClientRect()
-    const step = (rect?.width || 0) / 5
+    const step = (rect?.width || 0) / 2
     const left = rect?.left || 0
     const right = rect?.right || 0
     const sourceX = monitor.getClientOffset()?.x || 0
@@ -66,8 +70,8 @@ const [, drop] = useDrop<Widget>({
   }
 })
 
-const [collect, drag] = useDrag(() => ({
-  type: 'rmCol',
+const [collect, drag, preview] = useDrag(() => ({
+  type: props.widget.type,
   item: props.widget,
   collect: monitor => {
     return {
@@ -80,7 +84,13 @@ const { isDragging } = toRefs(collect)
 const opacity = computed(() => (unref(isDragging) ? 0 : 1))
 
 const setRef = (el: HTMLDivElement) => {
-  wrapper.value = drag(drop(el)) as HTMLDivElement
+  wrapper.value = preview(drop(el)) as HTMLDivElement
 }
 // 拖拽结束 //////
 </script>
+
+<style lang="scss" scoped>
+.ruomu-widget {
+  position: relative;
+}
+</style>

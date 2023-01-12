@@ -20,7 +20,7 @@
 
 <script lang="ts" setup name="rmCol">
 import Properties from '@/components/designer/property/Properties.vue'
-import { RmCol } from '@/components/designer/widget/container/rmCol/RmCol'
+import { RmCol } from '@/components/designer/widget/container/col/RmCol'
 import { computed } from 'vue'
 
 const props = defineProps<{

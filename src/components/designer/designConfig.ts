@@ -1,6 +1,7 @@
 import eventBus from '@/utils/eventBus'
 import { PageProperty } from './property/settings/page/PageProperty'
 import { Container } from './widget/container/Container'
+import { Grid } from './widget/container/grid/Grid'
 import { Widget } from './widget/Widget'
 
 export class DesignConfig {
@@ -72,7 +73,7 @@ export class DesignConfig {
 
   addWidget (widget: Widget, index: number = -1) {
     const w = widget.clone() // widget.copy()
-
+    w.parent = null
     if (index > -1) {
       this.items.splice(index, 0, w)
     } else {
@@ -89,8 +90,7 @@ export class DesignConfig {
       })
       if (idx > -1) {
         this.removeFromParent(movedWidget)
-        parent.children.splice(idx, 0, movedWidget)
-        movedWidget.parent = parent
+        parent.addChild(movedWidget, idx)
       }
     } else {
       // 没有父节点

@@ -4,6 +4,7 @@ import { Widget } from '../../Widget'
 import { Container } from '../Container'
 
 export class RmCol extends Container {
+  options:RmColProperty
   constructor (
     {
       type = 'rmCol',
@@ -27,6 +28,20 @@ export class RmCol extends Container {
         parent?: Widget | null
     }
   ) {
-    super({ type, group, icon, displayName, selected, id, parent, children, options })
+    super({ type, group, icon, displayName, selected, id, parent, children })
+    this.options = options
+  }
+
+  clone (): RmCol {
+    const cloned = new RmCol(this)
+    cloned.id = this.type + generateId()
+    cloned.options.name = cloned.id
+    cloned.children = []
+    this.children.forEach(c => {
+      const clonedChild = c.clone()
+      clonedChild.parent = cloned
+      cloned.children.push(clonedChild)
+    })
+    return cloned
   }
 }

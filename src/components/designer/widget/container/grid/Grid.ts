@@ -6,6 +6,8 @@ import { RmCol } from '../col/RmCol'
 import { Container } from '../Container'
 
 export class Grid extends Container {
+  options: GridProperty = new GridProperty({})
+
   constructor (
     {
       type = 'grid',
@@ -29,17 +31,26 @@ export class Grid extends Container {
         parent?: Widget | null
     }
   ) {
-    super({ type, group, icon, displayName, selected, id, parent, options, children })
+    super({ type, group, icon, displayName, selected, id, parent, children })
     if (this.children.length === 0) {
       this.addCol()
       this.addCol()
     }
+    this.options = options
   }
 
   removeChildren (startIdx: number = 0, size: number = 1) {
     super.removeChildren(startIdx, size)
     if (this.options.equalCols && this.children.length > 0) {
       const span = 24 / this.children.length
+      this.changeAllChildrenOptions({ span })
+    }
+  }
+
+  addChild (child: Widget, index: number = 0) {
+    super.addChild(child, index)
+    if (this.options.equalCols) {
+      const span = 24 / (this.children.length)
       this.changeAllChildrenOptions({ span })
     }
   }
@@ -53,5 +64,18 @@ export class Grid extends Container {
         span: 24 / this.children.length
       })
     }
+  }
+
+  clone (): Grid {
+    const cloned = new Grid(this)
+    cloned.id = this.type + generateId()
+    cloned.options.name = cloned.id
+    cloned.children = []
+    this.children.forEach(c => {
+      const clonedChild = c.clone()
+      clonedChild.parent = cloned
+      cloned.children.push(clonedChild)
+    })
+    return cloned
   }
 }

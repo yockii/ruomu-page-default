@@ -32,6 +32,7 @@ export class Container extends Widget {
 
     this.children = []
     children.forEach(w => {
+      w.parent = this
       this.children.push(w.clone())
     })
   }
@@ -46,7 +47,10 @@ export class Container extends Widget {
   }
 
   removeChildren (startIdx: number = 0, size: number = 1) {
-    this.children.splice(startIdx, size)
+    const ws = this.children.splice(startIdx, size)
+    ws.forEach(w => {
+      w.parent = null
+    })
   }
 
   changeAllChildrenOptions (options: Map<string, any> | Object) {
@@ -63,14 +67,6 @@ export class Container extends Widget {
     })
   }
 
-  copy () {
-    const nc = deepClone(this)
-    nc.id = nc.type + generateId()
-    nc.options.name = nc.id
-
-    return nc
-  }
-
   unselect () {
     this.selected = false
     this.children.forEach(w => {
@@ -84,7 +80,9 @@ export class Container extends Widget {
     cloned.options.name = cloned.id
     cloned.children = []
     this.children.forEach(c => {
-      cloned.children.push(c.clone())
+      const clonedChild = c.clone()
+      clonedChild.parent = cloned
+      cloned.children.push(clonedChild)
     })
     return cloned
   }
