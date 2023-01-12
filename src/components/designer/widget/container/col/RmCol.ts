@@ -1,4 +1,5 @@
 import { RmColProperty } from '@/components/designer/property/settings/container/col/RmColProperty'
+import { generateId } from '@/utils/util'
 import { Widget } from '../../Widget'
 import { Container } from '../Container'
 

@@ -42,6 +42,10 @@ export class Widget {
 
     this.options = options.clone()
 
+    if (!this.options.name || this.options.name === '') {
+      this.options.name = this.id || ''
+    }
+
     this.parent = parent
     this.selected = selected
   }

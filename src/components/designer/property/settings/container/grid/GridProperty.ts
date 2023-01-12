@@ -5,14 +5,16 @@ export class GridProperty implements Property {
   justify = 'start'
   align = 'top'
   name = ''
+  equalCols = true
 
   constructor ({
-    gutter, justify, align, name
+    gutter, justify, align, name, equalCols = true
   }: {
     gutter?: number,
     justify?: string,
     align?: string,
-    name?:string
+    name?: string,
+    equalCols?: boolean
     }) {
     if (gutter && gutter >= 0) {
       this.gutter = gutter
@@ -25,6 +27,9 @@ export class GridProperty implements Property {
     }
     if (name && name !== '') {
       this.name = name
+    }
+    if (equalCols !== undefined) {
+      this.equalCols = equalCols
     }
   }
 
@@ -46,5 +51,9 @@ export class GridProperty implements Property {
 
   setName (val: string) {
     this.name = val
+  }
+
+  setEqualCols (val:boolean) {
+    this.equalCols = val
   }
 }

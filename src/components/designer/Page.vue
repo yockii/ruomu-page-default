@@ -30,11 +30,10 @@ const unselectWidget = () => {
 }
 
 const [collect, drop] = useDrop(() => ({
-  accept: 'container',
+  accept: ['grid'],
   drop (_item: any, monitor) {
     const didDrop = monitor.didDrop()
     if (didDrop) {
-      console.log(didDrop)
       return
     }
 

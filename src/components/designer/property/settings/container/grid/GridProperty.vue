@@ -6,6 +6,9 @@
     <el-form-item label="间距">
       <el-input-number v-model="gutter" :min="0" :step="1"/>
     </el-form-item>
+    <el-form-item label="列等宽">
+      <el-switch v-model="equalCols" />
+    </el-form-item>
   </Properties>
 </template>
 
@@ -27,5 +30,8 @@ const gutter = computed({
   get: () => props.widget.options.gutter,
   set: val => props.widget.options.setGutter(val)
 })
-
+const equalCols = computed({
+  get: () => props.widget.options.equalCols,
+  set: val => props.widget.options.setEqualCols(val)
+})
 </script>

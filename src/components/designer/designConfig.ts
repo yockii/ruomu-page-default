@@ -111,7 +111,7 @@ export class DesignConfig {
         return w.id === widget.id
       })
       if (idx > -1) {
-        parent.children.splice(idx, 1)
+        parent.removeChildren(idx, 1)
       }
     } else {
       const idx = this.items.findIndex(w => w.id === widget.id)

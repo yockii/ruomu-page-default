@@ -1,5 +1,5 @@
 <template>
-  <WidgetDesignWrapperVue :widget="widget" :design-config="designConfig">
+  <WidgetDesignWrapperVue :accept="['rmCol', 'grid']" :widget="widget" :design-config="designConfig">
     <el-row :gutter="widget?.options.gutter || 0" :justify="justify" class="ruomu-widget" :class="{selected: widget?.selected}" @click.stop="selectRow">
       <ColWidget v-for="item in widget.children" :key="item.id" :design-config="designConfig" :widget="item"></ColWidget>
       </el-row>
@@ -21,44 +21,14 @@ import SvgIcon from '@/components/svg-icon/index.vue'
 import { computed, onMounted, toRefs } from 'vue'
 import { DesignConfig } from '../../../designConfig'
 import { Widget } from '../../Widget'
-import { Container } from '../Container'
 import ColWidget from '../col/RmCol.vue'
-import { RmColProperty } from '../../../property/settings/container/col/RmColProperty'
 import { RmCol } from '../col/RmCol'
+import { generateId } from '@/utils/util'
+import { Grid } from './Grid'
 const props = defineProps<{
-  widget: Container,
+  widget: Grid,
   designConfig: DesignConfig
 }>()
-
-onMounted(() => {
-  if (props.widget) {
-    if (props.widget.children.length === 0) {
-      setCols(2)
-    }
-  }
-})
-
-const setCols = (num: number) => {
-  if (props.widget.children.length === num) {
-    return
-  }
-  if (props.widget.children.length > num) {
-    props.widget.removeChildren(num - 1)
-  } else {
-    const needCount = num - props.widget.children.length
-    for (let i = 0; i < needCount; i++) {
-      addCol()
-    }
-  }
-}
-
-const addCol = () => {
-  const span = 24 / (props.widget.children.length + 1)
-  props.widget.addChild(
-    new RmCol({ })
-  )
-  props.widget.changeAllChildrenOptions({ span })
-}
 
 const justify = computed(() => {
   if (props.widget?.options) {

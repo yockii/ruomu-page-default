@@ -17,6 +17,7 @@ import { unref, computed, ref } from 'vue'
 import type { XYCoord, Identifier } from 'dnd-core'
 import { Container } from './container/Container'
 const props = defineProps<{
+  accept: string[],
   widget: Widget,
   designConfig: DesignConfig
 }>()
@@ -24,16 +25,13 @@ const props = defineProps<{
 // 拖拽相关代码 ///
 const wrapper = ref<HTMLDivElement>()
 
-const [dropCollect, drop] = useDrop<Widget, void, { handlerId: Identifier | null, isShallowOver: boolean }>({
-  accept: ['container', 'widget'],
-  collect (monitor) {
-    return {
-      handlerId: monitor.getHandlerId(),
-      isShallowOver: monitor.isOver({ shallow: true })
-    }
-  },
+const [, drop] = useDrop<Widget>({
+  accept: props.accept,
   hover (item: Widget, monitor) {
     if (item.id === props.widget.id) {
+      return
+    }
+    if (item.type === 'rmCol') {
       return
     }
 
@@ -55,7 +53,6 @@ const [dropCollect, drop] = useDrop<Widget, void, { handlerId: Identifier | null
       if (dragIndex < hoverIndex) {
         return
       }
-      console.log(`dragIndex=${dragIndex}, hoverIndex=${hoverIndex}`)
 
       // 在当前组件之前插入
       props.designConfig.moveWidget(item, props.widget)
@@ -63,7 +60,6 @@ const [dropCollect, drop] = useDrop<Widget, void, { handlerId: Identifier | null
       if (dragIndex > hoverIndex) {
         return
       }
-      console.log(`dragIndex=${dragIndex}, hoverIndex=${hoverIndex}`)
       // 在当前组件之后插入
       props.designConfig.moveWidget(item, props.widget, true)
     } else {
@@ -72,24 +68,22 @@ const [dropCollect, drop] = useDrop<Widget, void, { handlerId: Identifier | null
   }
 })
 
-const [collect, drag] = useDrag(() => ({
-  type: props.widget.group,
+const [collect, drag, preview] = useDrag(() => ({
+  type: props.widget.type,
   item: props.widget,
   collect: monitor => {
     const result = {
-      handlerId: monitor.getHandlerId(),
       isDragging: monitor.isDragging()
     }
     return result
   }
 }))
 
-const { handlerId, isShallowOver } = toRefs(dropCollect)
 const { isDragging } = toRefs(collect)
 const opacity = computed(() => (unref(isDragging) ? 0 : 1))
 
 const setRef = (el: HTMLDivElement) => {
-  wrapper.value = drag(drop(el)) as HTMLDivElement
+  wrapper.value = preview(drop(el)) as HTMLDivElement
 }
 // 拖拽代码结束 ///
 
