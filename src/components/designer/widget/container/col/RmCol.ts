@@ -4,7 +4,14 @@ import { Widget } from '../../Widget'
 import { Container } from '../Container'
 
 export class RmCol extends Container {
-  options:RmColProperty
+  options: RmColProperty
+  accept: string[] = [
+    'rmCol', // 拖拽排序需要
+    'grid',
+    'form',
+    'tab'
+  ]
+
   constructor (
     {
       type = 'rmCol',

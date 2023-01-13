@@ -9,6 +9,7 @@ export class Widget {
   displayName:string
   options: Property
   parent?: Widget | null
+  accept:string[] = []
 
   selected = false
   id: string

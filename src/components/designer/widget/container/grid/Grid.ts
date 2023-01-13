@@ -7,6 +7,10 @@ import { Container } from '../Container'
 
 export class Grid extends Container {
   options: GridProperty = new GridProperty({})
+  accept: string[] = [
+    'rmCol',
+    'grid' // 拖拽排序需要
+  ]
 
   constructor (
     {

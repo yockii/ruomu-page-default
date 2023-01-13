@@ -1,6 +1,6 @@
 <template>
-  <WidgetDesignWrapperVue :accept="['rmCol', 'grid']" :widget="widget" :design-config="designConfig">
-    <el-row :gutter="widget?.options.gutter || 0" :justify="justify" class="ruomu-widget" :class="{selected: widget?.selected}" @click.stop="selectRow">
+  <WidgetDesignWrapperVue :widget="widget" :design-config="designConfig">
+    <el-row :gutter="widget?.options.gutter || 0" :justify="justify">
       <ColWidget v-for="item in widget.children" :key="item.id" :design-config="designConfig" :widget="item"></ColWidget>
       </el-row>
   </WidgetDesignWrapperVue>
@@ -52,10 +52,6 @@ const justify = computed(() => {
 
 const selectRow = function () {
   props.designConfig.selectWidget(props.widget)
-}
-
-const selectCol = function (col:Widget) {
-  props.designConfig.selectWidget(col)
 }
 
 </script>

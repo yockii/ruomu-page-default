@@ -30,7 +30,7 @@ const unselectWidget = () => {
 }
 
 const [collect, drop] = useDrop(() => ({
-  accept: ['grid'],
+  accept: ['grid', 'rmForm'],
   drop (_item: any, monitor) {
     const didDrop = monitor.didDrop()
     if (didDrop) {
@@ -76,11 +76,20 @@ const [collect, drop] = useDrop(() => ({
   }
   :deep(.drag-handle) {
     position: absolute;
+    top: 0;
+    left: 0;
     padding: 6px;
     font-size: 12px;
     color: #fff;
     background-color: #0CF;
     cursor: move;
+    z-index: 999999;
+  }
+  :deep(.ext-area) {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #0CF;
     z-index: 999999;
   }
 }

@@ -1,9 +1,12 @@
 <template>
-  <div :ref="setRef" class="drag-box" :style="{opacity}">
+  <div :ref="setRef" class="drag-box ruomu-widget" :style="{opacity}" :class="{selected: widget?.selected}" @click.stop="selectWidget">
     <div v-if="widget.selected" :ref="drag" class="drag-handle">
       <SvgIcon icon="move"></SvgIcon>
     </div>
     <slot></slot>
+    <div v-if="widget.selected" class="ext-area">
+      aaa
+    </div>
   </div>
 </template>
 
@@ -17,7 +20,6 @@ import { unref, computed, ref } from 'vue'
 import type { XYCoord, Identifier } from 'dnd-core'
 import { Container } from './container/Container'
 const props = defineProps<{
-  accept: string[],
   widget: Widget,
   designConfig: DesignConfig
 }>()
@@ -26,7 +28,7 @@ const props = defineProps<{
 const wrapper = ref<HTMLDivElement>()
 
 const [, drop] = useDrop<Widget>({
-  accept: props.accept,
+  accept: props.widget.accept,
   hover (item: Widget, monitor) {
     if (item.id === props.widget.id) {
       return
@@ -86,5 +88,9 @@ const setRef = (el: HTMLDivElement) => {
   wrapper.value = preview(drop(el)) as HTMLDivElement
 }
 // 拖拽代码结束 ///
+
+const selectWidget = () => {
+  props.designConfig.selectWidget(props.widget)
+}
 
 </script>

@@ -29,7 +29,7 @@ const selected = () => {
 const wrapper = ref<HTMLDivElement>()
 
 const [, drop] = useDrop<Widget>({
-  accept: ['container', 'widget', 'rmCol'],
+  accept: props.widget.accept,
   hover (item: Widget, monitor) {
     if (item.type !== 'rmCol') {
       return // 对于非rmCol的类型，不参与排序，直接返回
