@@ -6,7 +6,11 @@ import { Container } from '../Container'
 
 export class RmForm extends Container {
   options: RmFormProperty = new RmFormProperty({})
-  accept: string[] = []
+  accept: string[] = [
+    // 拖拽排序需要
+    'grid', 'rmForm'
+  ]
+
   children: RmFormItem[] = []
 
   constructor (

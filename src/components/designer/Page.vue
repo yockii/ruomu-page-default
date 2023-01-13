@@ -30,7 +30,7 @@ const unselectWidget = () => {
 }
 
 const [collect, drop] = useDrop(() => ({
-  accept: ['grid', 'rmForm'],
+  accept: ['container', 'form'],
   drop (_item: any, monitor) {
     const didDrop = monitor.didDrop()
     if (didDrop) {
@@ -87,10 +87,15 @@ const [collect, drop] = useDrop(() => ({
   }
   :deep(.ext-area) {
     position: absolute;
+    padding: 1px 4px;
     bottom: 0;
     right: 0;
     background-color: #0CF;
     z-index: 999999;
+
+    .ext-item {
+      cursor: pointer;
+    }
   }
 }
 </style>

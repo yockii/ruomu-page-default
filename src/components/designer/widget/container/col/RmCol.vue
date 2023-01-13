@@ -71,7 +71,7 @@ const [, drop] = useDrop<Widget>({
 })
 
 const [collect, drag, preview] = useDrag(() => ({
-  type: props.widget.type,
+  type: props.widget.group,
   item: props.widget,
   collect: monitor => {
     return {

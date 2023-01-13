@@ -13,7 +13,7 @@ const props = defineProps<{
 }>()
 
 const [collect, drag] = useDrag(() => ({
-  type: props.widget.type,
+  type: props.widget.group,
   item: props.widget,
   collect: monitor => ({
     isDragging: monitor.isDragging()

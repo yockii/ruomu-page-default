@@ -5,7 +5,9 @@
     </div>
     <slot></slot>
     <div v-if="widget.selected" class="ext-area">
-      aaa
+      <div class="ext-item" title="删除" @click.stop="removeWidget">
+        <SvgIcon icon="remove"/>
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +30,7 @@ const props = defineProps<{
 const wrapper = ref<HTMLDivElement>()
 
 const [, drop] = useDrop<Widget>({
-  accept: props.widget.accept,
+  accept: ['container', 'form'],
   hover (item: Widget, monitor) {
     if (item.id === props.widget.id) {
       return
@@ -71,7 +73,7 @@ const [, drop] = useDrop<Widget>({
 })
 
 const [collect, drag, preview] = useDrag(() => ({
-  type: props.widget.type,
+  type: props.widget.group,
   item: props.widget,
   collect: monitor => {
     const result = {
@@ -91,6 +93,9 @@ const setRef = (el: HTMLDivElement) => {
 
 const selectWidget = () => {
   props.designConfig.selectWidget(props.widget)
+}
+const removeWidget = () => {
+  props.designConfig.removeFromParent(props.widget)
 }
 
 </script>

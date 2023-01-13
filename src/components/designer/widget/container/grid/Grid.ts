@@ -9,7 +9,8 @@ export class Grid extends Container {
   options: GridProperty = new GridProperty({})
   accept: string[] = [
     'rmCol',
-    'grid' // 拖拽排序需要
+    // 拖拽排序需要
+    'grid', 'rmForm'
   ]
 
   constructor (
