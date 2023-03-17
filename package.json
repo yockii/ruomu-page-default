@@ -1,75 +1,31 @@
 {
   "name": "ruomu-page-default",
   "version": "1.0.0",
-  "description": "ruomu",
-  "author": "yockii",
-  "private": true,
-  "type": "module",
+  "packageManager": "pnpm@7.18.1",
   "scripts": {
-    "dev": "yarn dev:dev",
-    "dev:dev": "vite --mode dev",
-    "dev:uat": "vite --mode uat",
-    "dev:prod": "vite --mode prod",
-    "build:dev": "vue-tsc --noEmit && vite build --mode dev",
-    "build:uat": "vue-tsc --noEmit && vite build --mode uat",
-    "build:prod": "vue-tsc --noEmit && vite build --mode prod",
-    "preview": "vite preview",
-    "lint": "eslint \"src/**/*.{js,ts,vue,jsx,tsx}\" --fix"
+    "dev": "pnpm build:runtime && pnpm --filter \"ruomu-page\" dev",
+    "build": "pnpm --filter \"ruomu-*\" build",
+    "build:runtime": "pnpm --filter \"ruomu-runtime\" build"
   },
-  "dependencies": {
-    "@element-plus/icons-vue": "^2.0.10",
-    "@vueuse/core": "^9.10.0",
-    "dnd-core": "^16.0.1",
-    "element-plus": "^2.2.19",
-    "lodash.clonedeep": "^4.5.0",
-    "mitt": "^3.0.0",
-    "nprogress": "^0.2.0",
-    "pinia": "^2.0.23",
-    "pinia-plugin-persistedstate": "^2.3.0",
-    "react-dnd-html5-backend": "^16.0.1",
-    "vue": "^3.2.41",
-    "vue-router": "^4.1.6",
-    "vue3-dnd": "^2.0.2"
-  },
+  "workspaces": [
+    "ui"
+  ],
   "devDependencies": {
-    "@commitlint/cli": "^17.2.0",
-    "@commitlint/config-conventional": "^17.2.0",
-    "@types/lodash.clonedeep": "^4.5.7",
-    "@types/node": "^18.11.9",
-    "@types/nprogress": "^0.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.42.0",
-    "@typescript-eslint/parser": "^5.42.0",
-    "@vitejs/plugin-vue": "^3.2.0",
-    "@vitejs/plugin-vue-jsx": "^2.1.0",
-    "cz-conventional-changelog": "3.3.0",
-    "eslint": "^8.26.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.4.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-vue": "^9.7.0",
-    "husky": "^8.0.1",
-    "lint-staged": "^13.0.3",
-    "sass": "^1.55.0",
-    "stylelint": "^14.16.0",
-    "stylelint-config-standard": "^29.0.0",
-    "stylelint-scss": "^4.3.0",
-    "typescript": "^4.8.4",
-    "vite": "^3.2.2",
-    "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-svg-icons": "^2.0.1",
-    "vite-plugin-vue-setup-extend": "^0.4.0",
-    "vue-eslint-parser": "^9.1.0",
-    "vue-tsc": "^1.0.9"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "lint-staged": {
-    "*.{js,ts,jsx,tsx,vue}": [
-      "npm run lint"
-    ]
+    "@babel/core": "^7.21.3",
+    "@types/node": "^18.15.3",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "element-plus": "^2.3.0",
+    "eslint": "^8.36.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-vue": "^9.9.0",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.4",
+    "vitest": "^0.29.3",
+    "vue": "^3.2.47"
   }
 }
